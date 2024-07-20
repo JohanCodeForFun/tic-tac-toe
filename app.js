@@ -8,6 +8,12 @@ const gameBoard = {
 
       for (let j = 0; j < this.board[i].length; j++) {
         const cell = document.createElement("td");
+        cell.addEventListener("click", (e) => {
+          let cellContent = cellText.textContent
+          cellContent = actions.placeMark(cellContent)
+          console.log("log", cellContent)
+        })
+        console.log("first")
         const cellText = document.createTextNode(this.board[i][j])
       cell.append(cellText)
       row.append(cell)
@@ -28,13 +34,28 @@ const gameBoard = {
   ]
 };
 
-const player1 = {}
-const player2 = {}
+function Player(name, marker) {
+  this.name = name;
+  this.marker = marker
+}
+
+const player1 = new Player("Adam", "X")
+const player2 = new Player("Bob", "O")
 
 const actions = {
-  placeMark: function() {
-    console.log("hello")
+  playerTurn : 1,
+  placeMark: function(mark) {
+    if (this.playerTurn === 1) {
+      this.playerTurn++
+      playerTurn.innerHTML = "Player: " + actions.playerTurn
+      return "X"
+    } else {
+      this.playerTurn--
+      playerTurn.innerHTML = "Player: " + actions.playerTurn
+      return "O"
+    }
   }
 }
-actions.placeMark()
-console.log(gameBoard.board)
+
+const playerTurn = document.querySelector("#playerTurn")
+playerTurn.innerHTML = "Player: " + actions.playerTurn
