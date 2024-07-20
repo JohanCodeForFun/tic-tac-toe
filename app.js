@@ -8,14 +8,20 @@ const gameBoard = {
 
       for (let j = 0; j < this.board[i].length; j++) {
         const cell = document.createElement("td");
+        const cellText = document.createTextNode("-")
+        cell.append(cellText)
+
         cell.addEventListener("click", () => {
-          let cellContent = cellText.textContent
-          cellContent = actions.placeMark(cellContent)
-          cell.innerHTML = cellContent
+          let cellContent = cell.textContent
+
+          if (cellContent !== "-") {
+            return; 
+          } else {
+            cellContent = actions.placeMark()
+            cell.innerHTML = cellContent
+          }
         })
 
-        const cellText = document.createTextNode("_")
-      cell.append(cellText)
       row.append(cell)
       }
 
@@ -45,6 +51,7 @@ const player2 = new Player("Bob", "O")
 const actions = {
   playerTurn : 1,
   placeMark: function() {
+
     if (this.playerTurn === 1) {
       this.playerTurn++
       playerTurn.innerHTML = "Player: " + actions.playerTurn
