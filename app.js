@@ -23,7 +23,9 @@ const gameBoard = {
             gameBoard.board[i][j] = cellContent
             // checkThreeInRow(cellContent)
           }
-          game()
+          // game()
+          checkColumn()
+          checkRows()
         });
 
         row.append(cell);
@@ -38,19 +40,19 @@ const gameBoard = {
     tbl.setAttribute("border", "2");
   },
   board: [
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""],
+    ["-", "-", "-"],
+    ["-", "-", "-"],
+    ["-", "-", "-"],
   ],
 };
 
-function Player(name, marker) {
-  this.name = name;
-  this.marker = marker;
-}
+// function Player(name, marker) {
+//   this.name = name;
+//   this.marker = marker;
+// }
 
-const player1 = new Player("Adam", "X");
-const player2 = new Player("Bob", "O");
+// const player1 = new Player("Adam", "X");
+// const player2 = new Player("Bob", "O");
 
 const actions = {
   playerTurn: 1,
@@ -70,41 +72,41 @@ const actions = {
 const playerTurn = document.querySelector("#playerTurn");
 playerTurn.innerHTML = "Player: " + actions.playerTurn;
 
+// const mark = (marker) => {
+//   return marker
+// }
 
-const game = () => {
-  if (gameBoard.board[0].every(x => x === "X")) {
-    console.log("first: x won")
-  } else if (gameBoard.board[0].every(x => x === "O")) {
-    console.log("second: o won")
-  } else if (gameBoard.board[1].every(x => x === "X")) {
-    console.log("third: x won")
-  } else if (gameBoard.board[1].every(x => x === "O")) {
-    console.log("fourth: o won")
-  } else if (gameBoard.board[2].every(x => x === "X")) {
-    console.log("fifth: x won")
-  } else if (gameBoard.board[2].every(x => x === "O")) {
-    console.log("sixth: o won")
-  } else if /* columns */ (gameBoard.board[0][0] === "X" && gameBoard.board[1][0] === "X" && gameBoard.board[2][0] === "X") {
-    console.log("seventh: x won")
-  } else if (gameBoard.board[0][1] === "X" && gameBoard.board[1][1] === "X" && gameBoard.board[2][1] === "X") {
-    console.log("eigth: x won")
-  } else if (gameBoard.board[0][2] === "X" && gameBoard.board[1][2] === "X" && gameBoard.board[2][2] === "X") {
-    console.log("seventh: x won")
-  } else if (gameBoard.board[0][0] === "O" && gameBoard.board[1][0] === "O" && gameBoard.board[2][0] === "O") {
-    console.log("seventh: o won")
-  } else if (gameBoard.board[0][1] === "O" && gameBoard.board[1][1] === "O" && gameBoard.board[2][1] === "O") {
-    console.log("seventh: o won")
-  } else if (gameBoard.board[0][2] === "O" && gameBoard.board[1][2] === "O" && gameBoard.board[2][2] === "O") {
-    console.log("seventh: o won")
-  } /* diagnoal */ else if (gameBoard.board[0][0] === "X" && gameBoard.board[1][1] === "X" && gameBoard.board[2][2] === "X") {
-    console.log("seventh: x won")
-  } else if (gameBoard.board[2][2] === "X" && gameBoard.board[1][1] === "X" && gameBoard.board[0][2] === "X") {
-    console.log("seventh: x won")
-  } else if (gameBoard.board[0][0] === "O" && gameBoard.board[1][1] === "O" && gameBoard.board[2][2] === "O") {
-    console.log("seventh: x won")
-  } else if (gameBoard.board[2][2] === "O" && gameBoard.board[1][1] === "O" && gameBoard.board[2][0] === "O") {
-    console.log("seventh: o won")
-  } 
+const checkColumn = () => {
+  for (let j = 0; j < gameBoard.board[0].length; j++) { // Iterate through each column
+    let win = true;
+    for (let i = 1; i < gameBoard.board.length; i++) { // Compare cells in the column
+      if (gameBoard.board[i][j] !== gameBoard.board[i - 1][j] || gameBoard.board[i][j] === '' || gameBoard.board[i][j] === null) {
+        win = false;
+        break; // Break if any cell is not equal to the previous one or is empty/null
+      }
+    }
+    if (win) {
+      console.log("win")
+      return true
+    }; // If all cells in a column are identical and not empty/null, return true
+  }
+  return false; // Return false if no column meets the win condition
+}
+
+const checkRows = () => {
+  for (let i = 0; i < gameBoard.board.length; i++) {
+    if (gameBoard.board[i].every(x => x === "X")) {
+      console.log("x wins")
+      return "x wins"
+    }
+    
+    if (gameBoard.board[i].every(o => o === "O")) {
+      console.log("o wins")
+      return "o wins"
+    }
+    console.log("no winner yet")
+    return "no winner yet"
+  }
 }
 
 let x = "";
