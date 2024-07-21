@@ -74,19 +74,23 @@ const actions = {
 const playerTurn = document.querySelector("#playerTurn");
 playerTurn.innerHTML = "Player: " + actions.playerTurn;
 
+function win(player) {
+  alert(`Player ${player} wins!`)
+}
+
 function checkWinner(board) {
   for (let row of board) {
-    if (row.every(cell => cell === "X")) return "X wins";
-    if (row.every(cell => cell === "O")) return "O wins";
+    if (row.every(cell => cell === "X")) return win("X");
+    if (row.every(cell => cell === "O")) return win("O");
   }
 
   for (let i = 0; i < board[0].length; i++) {
-    if (board.every(row => row[i] === "X")) return "X wins";
-    if (board.every(row => row[i] === "O")) return "O wins";
+    if (board.every(row => row[i] === "X")) return win("X");
+    if (board.every(row => row[i] === "O")) return win("O");
   }
 
-  if (board.every((row, i) => row[i] === "X")) return "X wins";
-  if (board.every((row, i) => row[i] === "O")) return "O wins";
+  if (board.every((row, i) => row[i] === "X")) return win("X");
+  if (board.every((row, i) => row[i] === "O")) return win("O");
 
   return "No winner yet";
 }
