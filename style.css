@@ -1,3 +1,11 @@
+body {
+  font-family: 'Permanent Marker', 'Comic Sans MS', cursive, sans-serif;
+}
+
+#title {
+  font-size: 42px;
+}
+
 table {
   width: 320px;
   height: 320px;
