@@ -46,6 +46,10 @@ const gameBoard = {
     ["-", "-", "-"],
     ["-", "-", "-"],
   ],
+  winner: "",
+  restart: function() {
+    this.loadBoard 
+  }
 };
 
 // function Player(name, marker) {
@@ -85,8 +89,8 @@ function checkWinner(board) {
   }
 
   for (let i = 0; i < board[0].length; i++) {
-    if (board.every(row => row[i] === "X")) return win("X");
-    if (board.every(row => row[i] === "O")) return win("O");
+    if (board.every(col => col[i] === "X")) return win("X");
+    if (board.every(col => col[i] === "O")) return win("O");
   }
 
   if (board.every((row, i) => row[i] === "X")) return win("X");
