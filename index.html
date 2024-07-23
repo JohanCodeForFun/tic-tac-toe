@@ -10,7 +10,7 @@
 <body>
   <h1 id="title">Tic Tac Toe</h1>
   
-  <section class="add-player">
+  <section id="add-player">
     <label for="player1">
       Player 1
     </label>
@@ -19,10 +19,10 @@
       Player 2
     </label>
     <input type="text" id="player2" name="plaer9000">
+    <button id="start" onclick="gameBoard.loadBoard()">Start the game!</button>
   </section>
 
   <section>
-    <button id="start" onclick="gameBoard.loadBoard()">Start the game!</button>
     <button id="restart" onclick="gameBoard.restart()">Restart</button>
   </section>
   <main id="gameboard">

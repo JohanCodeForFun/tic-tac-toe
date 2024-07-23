@@ -2,11 +2,15 @@ body {
   font-family: 'Permanent Marker', 'Comic Sans MS', cursive, sans-serif;
 }
 
-.add-player {
+#add-player {
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
   width: 160px;
+}
+
+#restart {
+  display: none;
 }
 
 .add-player > label {
@@ -15,6 +19,11 @@ body {
 
 .add-player > input {
   margin-bottom: 1rem;
+}
+
+#start {
+  padding: 1rem .5rem;
+  margin-top: 2rem;
 }
 
 #title {

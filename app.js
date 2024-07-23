@@ -1,5 +1,8 @@
 const gameBoard = {
   loadBoard: function () {
+    document.getElementById("add-player").style.display = "none";
+    document.getElementById("restart").style.display = "block";
+
     const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
 
@@ -53,6 +56,9 @@ const gameBoard = {
   }
 };
 
+// - create new players
+// - when start game is pressed, hide create player section.
+// - display winning name when game over.
 
 const createPlayer = (name, mark) => {
   return {
