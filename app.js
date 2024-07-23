@@ -8,13 +8,13 @@ const gameBoard = {
 
       for (let j = 0; j < this.board[i].length; j++) {
         const cell = document.createElement("td");
-        const cellText = document.createTextNode("-");
+        const cellText = document.createTextNode("");
         cell.append(cellText);
 
         cell.addEventListener("click", () => {
           let cellContent = cell.textContent;
 
-          if (cellContent !== "-") {
+          if (cellContent !== "") {
             return;
           } else {
             cellContent = actions.placeMark();
@@ -42,23 +42,28 @@ const gameBoard = {
     tbl.setAttribute("border", "2");
   },
   board: [
-    ["-", "-", "-"],
-    ["-", "-", "-"],
-    ["-", "-", "-"],
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""],
   ],
   winner: "",
+  gameOver: false,
   restart: function() {
     this.loadBoard 
   }
 };
 
-// function Player(name, marker) {
-//   this.name = name;
-//   this.marker = marker;
-// }
 
-// const player1 = new Player("Adam", "X");
-// const player2 = new Player("Bob", "O");
+const createPlayer = (name, mark) => {
+  return {
+    name,
+    mark
+  }
+}
+
+const game = (() => {
+
+})();
 
 const actions = {
   playerTurn: 1,
@@ -98,4 +103,3 @@ function checkWinner(board) {
 
   return "No winner yet";
 }
-
