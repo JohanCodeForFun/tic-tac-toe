@@ -13,6 +13,10 @@ body {
   display: none;
 }
 
+#playerTurn {
+  display: none;
+}
+
 .add-player > label {
   margin-bottom: .5rem;
 }
