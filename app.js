@@ -1,10 +1,13 @@
 const gameBoard = {
-  loadBoard: function () {
+  render: function () {
     document.getElementById("add-player").style.display = "none";
+    document.getElementById("playerTurn").style.display = "block";
     document.getElementById("restart").style.display = "block";
 
     const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
+
+    tbl.setAttribute("border", "2");
 
     for (let i = 0; i < this.board.length; i++) {
       const row = document.createElement("tr");
@@ -20,17 +23,12 @@ const gameBoard = {
           if (cellContent !== "") {
             return;
           } else {
-            cellContent = actions.placeMark();
+            cellContent = gameControls.placeMark();
             cell.innerHTML = cellContent;
 
-            gameBoard.board[i][j] = cellContent
-            // checkThreeInRow(cellContent)
+            gameBoard.board[i][j] = cellContent;
           }
-          // game()
-          // checkColumn()
-          // checkRows()
           checkWinner(gameBoard.board);
-          // console.log(checkWinner(gameBoard.board));
         });
 
         row.append(cell);
@@ -41,19 +39,12 @@ const gameBoard = {
 
     tbl.append(tblBody);
     document.body.appendChild(tbl);
-
-    tbl.setAttribute("border", "2");
   },
   board: [
     ["", "", ""],
     ["", "", ""],
     ["", "", ""],
   ],
-  winner: "",
-  gameOver: false,
-  restart: function() {
-    this.loadBoard 
-  }
 };
 
 // - create new players
@@ -63,49 +54,100 @@ const gameBoard = {
 const createPlayer = (name, mark) => {
   return {
     name,
-    mark
-  }
-}
-
-const game = (() => {
-
-})();
-
-const actions = {
-  playerTurn: 1,
-  placeMark: function () {
-    if (this.playerTurn === 1) {
-      this.playerTurn++;
-      playerTurn.innerHTML = "Player: " + actions.playerTurn;
-      return "X";
-    } else {
-      this.playerTurn--;
-      playerTurn.innerHTML = "Player: " + actions.playerTurn;
-      return "O";
-    }
-  },
+    mark,
+  };
 };
 
-const playerTurn = document.querySelector("#playerTurn");
-playerTurn.innerHTML = "Player: " + actions.playerTurn;
+const game = (() => {
+  let players = [];
+  let currentPlayerIndex;
+  let gameOver;
 
-function win(player) {
-  alert(`Player ${player} wins!`)
-}
+  const start = () => {
+    const player1 = document.querySelector("#player1").value;
+    const player2 = document.querySelector("#player2").value;
+    players = [
+      createPlayer(player1, "X"),
+      createPlayer(player2, "O"),
+    ];
+
+    currentPlayerIndex = 0;
+    updatePlayerTurnDisplay();
+    gameOver = false;
+
+    gameBoard.render();
+  };
+
+  const updatePlayerTurnDisplay = () => {
+    const currentPlayer = players[currentPlayerIndex];
+    document.querySelector("#playerTurn").innerHTML = `Player: ${currentPlayer.name} (${currentPlayer.mark})`;
+  };
+
+  const restart = () => {
+    gameBoard.board = [
+      ["", "", ""],
+      ["", "", ""],
+      ["", "", ""],
+    ];
+    gameBoard.render();
+
+    updatePlayerTurnDisplay();
+  };
+
+  const getNextPlayer = () => {
+    console.log("game over:", gameOver)
+    const currentMark = players[currentPlayerIndex].mark;
+    
+    if (gameOver) {
+      console.log("should stop on win", players[currentPlayerIndex].name)
+      return currentMark;
+    }
+
+    currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+    updatePlayerTurnDisplay();
+    
+    return currentMark;
+  }
+
+  const win = () => {
+    gameOver = true;
+    console.log("gameOver:", gameOver)
+    document.querySelector("#playerTurn").innerHTML = `Player ${players[currentPlayerIndex].name} (${players[currentPlayerIndex].mark}) wins!`
+  }
+
+  return {
+    start,
+    restart,
+    getNextPlayer,
+    win,
+  };
+})();
+
+const gameControls = (() => {
+  const placeMark = () => {
+    return game.getNextPlayer();
+  };
+
+  return {
+    placeMark,
+  }
+})();
 
 function checkWinner(board) {
+  // debugger;
   for (let row of board) {
-    if (row.every(cell => cell === "X")) return win("X");
-    if (row.every(cell => cell === "O")) return win("O");
+    if (row.every((cell) => cell === "X")) return game.win("X");
+    if (row.every((cell) => cell === "O")) return game.win("O");
   }
 
   for (let i = 0; i < board[0].length; i++) {
-    if (board.every(col => col[i] === "X")) return win("X");
-    if (board.every(col => col[i] === "O")) return win("O");
+    if (board.every((col) => col[i] === "X")) return game.win("X");
+    if (board.every((col) => col[i] === "O")) return game.win("O");
   }
 
-  if (board.every((row, i) => row[i] === "X")) return win("X");
-  if (board.every((row, i) => row[i] === "O")) return win("O");
+  if (board.every((row, i) => row[i] === "X")) return game.win("X");
+  if (board.every((row, i) => row[i] === "O")) return game.win("O");
+
 
   return "No winner yet";
 }
