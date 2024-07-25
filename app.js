@@ -95,13 +95,7 @@ const game = (() => {
   };
 
   const getNextPlayer = () => {
-    console.log("game over:", gameOver)
     const currentMark = players[currentPlayerIndex].mark;
-    
-    if (gameOver) {
-      console.log("should stop on win", players[currentPlayerIndex].name)
-      return currentMark;
-    }
 
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
     updatePlayerTurnDisplay();
@@ -111,8 +105,8 @@ const game = (() => {
 
   const win = () => {
     gameOver = true;
-    console.log("gameOver:", gameOver)
-    document.querySelector("#playerTurn").innerHTML = `Player ${players[currentPlayerIndex].name} (${players[currentPlayerIndex].mark}) wins!`
+    const previousPlayerIndex = currentPlayerIndex === 1 ? 0 : 1; 
+    document.querySelector("#playerTurn").innerHTML = `Player ${players[previousPlayerIndex].name} (${players[previousPlayerIndex].mark}) wins!`
   }
 
   return {
