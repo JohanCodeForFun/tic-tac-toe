@@ -47,10 +47,6 @@ const gameBoard = {
   ],
 };
 
-// - create new players
-// - when start game is pressed, hide create player section.
-// - display winning name when game over.
-
 const createPlayer = (name, mark) => {
   return {
     name,
@@ -105,8 +101,17 @@ const game = (() => {
 
   const win = () => {
     gameOver = true;
+
+    const squares = document.querySelectorAll("td");
+
+    squares.forEach(square => {
+      square.style.pointerEvents = "none";
+    });
+
     const previousPlayerIndex = currentPlayerIndex === 1 ? 0 : 1; 
     document.querySelector("#playerTurn").innerHTML = `Player ${players[previousPlayerIndex].name} (${players[previousPlayerIndex].mark}) wins!`
+
+    return;
   }
 
   return {
@@ -128,7 +133,6 @@ const gameControls = (() => {
 })();
 
 function checkWinner(board) {
-  // debugger;
   for (let row of board) {
     if (row.every((cell) => cell === "X")) return game.win("X");
     if (row.every((cell) => cell === "O")) return game.win("O");
