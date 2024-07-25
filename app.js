@@ -99,6 +99,18 @@ const game = (() => {
     return currentMark;
   }
 
+  const draw = () => {
+    gameOver = true;
+
+    const squares = document.querySelectorAll("td");
+
+    squares.forEach(square  => {
+      square.style.pointerEvents = "none";
+    })
+    
+    document.querySelector("#playerTurn").innerHTML = "It's a draw!"
+  }
+
   const win = () => {
     gameOver = true;
 
@@ -118,6 +130,7 @@ const game = (() => {
     start,
     restart,
     getNextPlayer,
+    draw,
     win,
   };
 })();
@@ -142,10 +155,17 @@ function checkWinner(board) {
     if (board.every((col) => col[i] === "X")) return game.win("X");
     if (board.every((col) => col[i] === "O")) return game.win("O");
   }
+  for (let i = board[0].length; i > 0; i--) {
+    if (board.every((col) => col[i] === "X")) return game.win("X");
+    if (board.every((col) => col[i] === "O")) return game.win("O");
+  }
 
   if (board.every((row, i) => row[i] === "X")) return game.win("X");
+  if (board.every((row, i) => row[board.length - 1 - i] === "X")) return game.win("X");
+  if (board.every((row, i) => row[board.length - 1 - i] === "O")) return game.win("O");
   if (board.every((row, i) => row[i] === "O")) return game.win("O");
 
+  if (board.flat().every(cell => cell === "X" || cell === "O")) return game.draw();
 
   return "No winner yet";
 }
