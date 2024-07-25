@@ -18,7 +18,7 @@ const gameBoard = (() => {
     const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
 
-    tbl.setAttribute("border", "2");
+    tbl.setAttribute("border", "1");
 
     for (let i = 0; i < board.length; i++) {
       const row = document.createElement("tr");
@@ -63,12 +63,12 @@ const gameBoard = (() => {
     updateCell,
     getBoard: () => board,
     resetBoard: () => {
-      for (let i = 0; i < board.length; i++) {
-        for (let j = 0; i < board[i].length; j++) {
-          board[i][j] = ""
-        }
-      }
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      board[i][j] = "";
     }
+  }
+}
   }
 })();
 
@@ -98,7 +98,11 @@ const game = (() => {
   };
 
   const restart = () => {
+    gameBoard.resetBoard();
     gameBoard.render();
+
+    currentPlayerIndex = 0;
+    updatePlayerTurnDisplay()
   };
 
   const getNextPlayer = () => {
