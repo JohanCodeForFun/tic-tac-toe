@@ -107,7 +107,7 @@ const game = (() => {
     squares.forEach(square  => {
       square.style.pointerEvents = "none";
     })
-    
+
     document.querySelector("#playerTurn").innerHTML = "It's a draw!"
   }
 
@@ -145,7 +145,7 @@ const gameControls = (() => {
   }
 })();
 
-function checkWinner(board) {
+const checkWinner = (board) => {
   for (let row of board) {
     if (row.every((cell) => cell === "X")) return game.win("X");
     if (row.every((cell) => cell === "O")) return game.win("O");
