@@ -1,18 +1,29 @@
-const gameBoard = {
-  render: function () {
+const gameBoard = (() => {
+  const board = [
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""],
+  ];
+
+  const render = () => {
     document.getElementById("add-player").style.display = "none";
     document.getElementById("playerTurn").style.display = "block";
     document.getElementById("restart").style.display = "block";
+
+    const existingTable = document.querySelector("table");
+    if (existingTable) {
+      document.body.removeChild(existingTable);
+    }
 
     const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
 
     tbl.setAttribute("border", "2");
 
-    for (let i = 0; i < this.board.length; i++) {
+    for (let i = 0; i < board.length; i++) {
       const row = document.createElement("tr");
 
-      for (let j = 0; j < this.board[i].length; j++) {
+      for (let j = 0; j < board[i].length; j++) {
         const cell = document.createElement("td");
         const cellText = document.createTextNode("");
         cell.append(cellText);
@@ -26,9 +37,9 @@ const gameBoard = {
             cellContent = gameControls.placeMark();
             cell.innerHTML = cellContent;
 
-            gameBoard.board[i][j] = cellContent;
+            gameBoard.updateCell(i, j, cellContent);
           }
-          checkWinner(gameBoard.board);
+          game.checkWinner(gameBoard.getBoard());
         });
 
         row.append(cell);
@@ -39,20 +50,27 @@ const gameBoard = {
 
     tbl.append(tblBody);
     document.body.appendChild(tbl);
-  },
-  board: [
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""],
-  ],
-};
-
-const createPlayer = (name, mark) => {
-  return {
-    name,
-    mark,
   };
-};
+
+  const updateCell = (rowIndex, colIndex, content) => {
+    if (rowIndex >= 0 && rowIndex < board.length && colIndex < board[rowIndex].length) {
+      board[rowIndex][colIndex] = content;
+    }
+  }
+
+  return {
+    render,
+    updateCell,
+    getBoard: () => board,
+    resetBoard: () => {
+      for (let i = 0; i < board.length; i++) {
+        for (let j = 0; i < board[i].length; j++) {
+          board[i][j] = ""
+        }
+      }
+    }
+  }
+})();
 
 const game = (() => {
   let players = [];
@@ -63,8 +81,8 @@ const game = (() => {
     const player1 = document.querySelector("#player1").value;
     const player2 = document.querySelector("#player2").value;
     players = [
-      createPlayer(player1, "X"),
-      createPlayer(player2, "O"),
+      gameControls.createPlayer(player1, "X"),
+      gameControls.createPlayer(player2, "O"),
     ];
 
     currentPlayerIndex = 0;
@@ -80,14 +98,7 @@ const game = (() => {
   };
 
   const restart = () => {
-    gameBoard.board = [
-      ["", "", ""],
-      ["", "", ""],
-      ["", "", ""],
-    ];
     gameBoard.render();
-
-    updatePlayerTurnDisplay();
   };
 
   const getNextPlayer = () => {
@@ -98,6 +109,31 @@ const game = (() => {
     
     return currentMark;
   }
+
+  const checkWinner = (board) => {
+    for (let row of board) {
+      if (row.every((cell) => cell === "X")) return game.win("X");
+      if (row.every((cell) => cell === "O")) return game.win("O");
+    }
+  
+    for (let i = 0; i < board[0].length; i++) {
+      if (board.every((col) => col[i] === "X")) return game.win("X");
+      if (board.every((col) => col[i] === "O")) return game.win("O");
+    }
+    for (let i = board[0].length; i > 0; i--) {
+      if (board.every((col) => col[i] === "X")) return game.win("X");
+      if (board.every((col) => col[i] === "O")) return game.win("O");
+    }
+  
+    if (board.every((row, i) => row[i] === "X")) return game.win("X");
+    if (board.every((row, i) => row[board.length - 1 - i] === "X")) return game.win("X");
+    if (board.every((row, i) => row[board.length - 1 - i] === "O")) return game.win("O");
+    if (board.every((row, i) => row[i] === "O")) return game.win("O");
+  
+    if (board.flat().every(cell => cell === "X" || cell === "O")) return game.draw();
+  
+    return "No winner yet";
+  }  
 
   const draw = () => {
     gameOver = true;
@@ -130,42 +166,26 @@ const game = (() => {
     start,
     restart,
     getNextPlayer,
+    checkWinner,
     draw,
     win,
   };
 })();
 
 const gameControls = (() => {
+  const createPlayer = (name, mark) => {
+    return {
+      name,
+      mark,
+    };
+  };
+
   const placeMark = () => {
     return game.getNextPlayer();
   };
 
   return {
+    createPlayer,
     placeMark,
   }
 })();
-
-const checkWinner = (board) => {
-  for (let row of board) {
-    if (row.every((cell) => cell === "X")) return game.win("X");
-    if (row.every((cell) => cell === "O")) return game.win("O");
-  }
-
-  for (let i = 0; i < board[0].length; i++) {
-    if (board.every((col) => col[i] === "X")) return game.win("X");
-    if (board.every((col) => col[i] === "O")) return game.win("O");
-  }
-  for (let i = board[0].length; i > 0; i--) {
-    if (board.every((col) => col[i] === "X")) return game.win("X");
-    if (board.every((col) => col[i] === "O")) return game.win("O");
-  }
-
-  if (board.every((row, i) => row[i] === "X")) return game.win("X");
-  if (board.every((row, i) => row[board.length - 1 - i] === "X")) return game.win("X");
-  if (board.every((row, i) => row[board.length - 1 - i] === "O")) return game.win("O");
-  if (board.every((row, i) => row[i] === "O")) return game.win("O");
-
-  if (board.flat().every(cell => cell === "X" || cell === "O")) return game.draw();
-
-  return "No winner yet";
-}
