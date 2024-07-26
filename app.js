@@ -91,28 +91,36 @@ const game = (() => {
   }
 
   const checkWinner = (board) => {
-    for (let row of board) {
-      if (row.every((cell) => cell === "X")) return game.win("X");
-      if (row.every((cell) => cell === "O")) return game.win("O");
-    }
-  
-    for (let i = 0; i < board[0].length; i++) {
-      if (board.every((col) => col[i] === "X")) return game.win("X");
-      if (board.every((col) => col[i] === "O")) return game.win("O");
-    }
-    for (let i = board[0].length; i > 0; i--) {
-      if (board.every((col) => col[i] === "X")) return game.win("X");
-      if (board.every((col) => col[i] === "O")) return game.win("O");
-    }
-  
-    if (board.every((row, i) => row[i] === "X")) return game.win("X");
-    if (board.every((row, i) => row[board.length - 1 - i] === "X")) return game.win("X");
-    if (board.every((row, i) => row[board.length - 1 - i] === "O")) return game.win("O");
-    if (board.every((row, i) => row[i] === "O")) return game.win("O");
-  
-    if (board.flat().every(cell => cell === "X" || cell === "O")) return game.draw();
-  
-    return "No winner yet";
+   const size = board.length;
+   let emptyFound = false;
+   let diag1 = { X: 0, O: 0 };
+   let diag2 = { X: 0, O: 0 };
+   
+   for (let i = 0; i < size; i++) {
+     let row = { X: 0, O: 0 };
+     let col = { X: 0, O: 0 };
+
+     for (let j = 0; j < size; j++) {
+       console.log(board, row[board[i][j]], col[board[j][i]])
+      row[board[i][j]]++;
+      col[board[j][i]]++;
+
+      if (board[i][j] === "") emptyFound = true;
+     }
+
+     // Diagonal checks
+     diag1[board[i][i]]++;
+     diag1[board[i][size - i - i]]++;
+
+     // Check for win in row or column
+     if (row["X"] === size || col["X"] === size) return game.win("X")
+      if (row["O"] === size || col["O"] === size) return game.win("O")
+      }
+    
+      if (diag1["X"] === size || diag1["X"] === size) return game.win("X")
+      if (diag2["X"] === size || diag2["X"] === size) return game.win("X")
+
+      if (!emptyFound) return game.draw();
   }  
 
   const draw = () => {
