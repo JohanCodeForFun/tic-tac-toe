@@ -5,7 +5,13 @@ const gameBoard = (() => {
     ["", "", ""],
   ];
 
-  const setBoard = (newBoard) => {
+  const setBoard = (rowIndex, colIndex, content) => {
+    if (rowIndex !== undefined && colIndex !== undefined) {
+      board[rowIndex][colIndex] = content;
+    }
+  }
+
+  const resetBoard = (newBoard) => {
     board = newBoard;
   }
 
@@ -42,6 +48,7 @@ const gameBoard = (() => {
   return {
     render,
     getBoard: () => board,
+    resetBoard,
     setBoard,
   }
 })();
@@ -152,7 +159,7 @@ const displayController = (() => {
   };
 
   const updateCell = (rowIndex, colIndex, content) => {
-      gameBoard.getBoard()[rowIndex][colIndex] = content;
+    gameBoard.setBoard(rowIndex, colIndex, content)
   };
 
   const resetBoard = () => {
@@ -169,7 +176,7 @@ const displayController = (() => {
       }
     }
 
-    gameBoard.setBoard(board);
+    gameBoard.resetBoard(board);
   };
 
   return {
