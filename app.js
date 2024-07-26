@@ -30,11 +30,13 @@ const gameBoard = (() => {
 
       for (let j = 0; j < board[i].length; j++) {
         const cell = document.createElement("td");
+        const span = document.createElement("span");
         const cellText = document.createTextNode("");
-        cell.append(cellText);
+        span.appendChild(cellText);
+        cell.appendChild(span);
 
         cell.addEventListener("click", () =>
-          gameControls.handleCellClick(i, j, cell)
+          gameControls.handleCellClick(i, j, span)
         );
 
         row.append(cell);
@@ -209,14 +211,15 @@ const gameControls = (() => {
     };
   };
 
-  const handleCellClick = (i, j, cell) => {
-    let cellContent = cell.textContent;
+  const handleCellClick = (i, j, span) => {
+    let cellContent = span.textContent;
 
     if (cellContent !== "") {
       return;
     } else {
       cellContent = placeMark();
-      cell.innerHTML = cellContent;
+      span.innerHTML = cellContent;
+      span.classList.add("rotate-on-click")
 
       displayController.updateCell(i, j, cellContent);
     }
