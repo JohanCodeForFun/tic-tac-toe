@@ -1,19 +1,18 @@
 const gameBoard = (() => {
-  const board = [
+  let board = [
     ["", "", ""],
     ["", "", ""],
     ["", "", ""],
   ];
 
+  const setBoard = (newBoard) => {
+    board = newBoard;
+  }
+
   const render = () => {
     document.getElementById("add-player").style.display = "none";
     document.getElementById("playerTurn").style.display = "block";
     document.getElementById("restart").style.display = "block";
-
-    const existingTable = document.querySelector("table");
-    if (existingTable) {
-      document.body.removeChild(existingTable);
-    }
 
     const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
@@ -43,6 +42,7 @@ const gameBoard = (() => {
   return {
     render,
     getBoard: () => board,
+    setBoard,
   }
 })();
 
@@ -156,11 +156,20 @@ const displayController = (() => {
   };
 
   const resetBoard = () => {
-    for (let i = 0; i < gameBoard.getBoard.length; i++) {
+    const existingTable = document.querySelector("table");
+    if (existingTable) {
+      document.body.removeChild(existingTable);
+    }
+
+    const board = gameBoard.getBoard()
+
+    for (let i = 0; i < board.length; i++) {
       for (let j = 0; j < board[i].length; j++) {
         board[i][j] = "";
       }
     }
+
+    gameBoard.setBoard(board);
   };
 
   return {
