@@ -101,24 +101,23 @@ const game = (() => {
      let col = { X: 0, O: 0 };
 
      for (let j = 0; j < size; j++) {
-       console.log(board, row[board[i][j]], col[board[j][i]])
-      row[board[i][j]]++;
-      col[board[j][i]]++;
-
+       row[board[i][j]]++;
+       col[board[j][i]]++;
       if (board[i][j] === "") emptyFound = true;
      }
 
      // Diagonal checks
      diag1[board[i][i]]++;
-     diag1[board[i][size - i - i]]++;
+     diag2[board[i][size - i - 1]]++;
 
      // Check for win in row or column
      if (row["X"] === size || col["X"] === size) return game.win("X")
       if (row["O"] === size || col["O"] === size) return game.win("O")
       }
     
-      if (diag1["X"] === size || diag1["X"] === size) return game.win("X")
-      if (diag2["X"] === size || diag2["X"] === size) return game.win("X")
+      // Check for win in diagonal
+      if (diag1["X"] === size || diag2["X"] === size) return game.win("X")
+      if (diag1["O"] === size || diag2["O"] === size) return game.win("O")
 
       if (!emptyFound) return game.draw();
   }  
