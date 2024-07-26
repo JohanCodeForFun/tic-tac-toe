@@ -28,19 +28,7 @@ const gameBoard = (() => {
         const cellText = document.createTextNode("");
         cell.append(cellText);
 
-        cell.addEventListener("click", () => {
-          let cellContent = cell.textContent;
-
-          if (cellContent !== "") {
-            return;
-          } else {
-            cellContent = gameControls.placeMark();
-            cell.innerHTML = cellContent;
-
-            gameBoard.updateCell(i, j, cellContent);
-          }
-          game.checkWinner(gameBoard.getBoard());
-        });
+        cell.addEventListener("click", () => gameControls.handleCellClick(i, j, cell));
 
         row.append(cell);
       }
@@ -52,23 +40,9 @@ const gameBoard = (() => {
     document.body.appendChild(tbl);
   };
 
-  const updateCell = (rowIndex, colIndex, content) => {
-    if (rowIndex >= 0 && rowIndex < board.length && colIndex < board[rowIndex].length) {
-      board[rowIndex][colIndex] = content;
-    }
-  }
-
   return {
     render,
-    updateCell,
     getBoard: () => board,
-    resetBoard: () => {
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board[i].length; j++) {
-      board[i][j] = "";
-    }
-  }
-}
   }
 })();
 
@@ -86,30 +60,25 @@ const game = (() => {
     ];
 
     currentPlayerIndex = 0;
-    updatePlayerTurnDisplay();
+    displayController.updatePlayerTurnDisplay(players, currentPlayerIndex);
     gameOver = false;
 
     gameBoard.render();
   };
 
-  const updatePlayerTurnDisplay = () => {
-    const currentPlayer = players[currentPlayerIndex];
-    document.querySelector("#playerTurn").innerHTML = `Player: ${currentPlayer.name} (${currentPlayer.mark})`;
-  };
-
   const restart = () => {
-    gameBoard.resetBoard();
+    displayController.resetBoard();
     gameBoard.render();
 
     currentPlayerIndex = 0;
-    updatePlayerTurnDisplay()
+    displayController.updatePlayerTurnDisplay(players, currentPlayerIndex)
   };
 
   const getNextPlayer = () => {
     const currentMark = players[currentPlayerIndex].mark;
 
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
-    updatePlayerTurnDisplay();
+    displayController.updatePlayerTurnDisplay(players, currentPlayerIndex);
     
     return currentMark;
   }
@@ -176,6 +145,30 @@ const game = (() => {
   };
 })();
 
+const displayController = (() => {
+  const updatePlayerTurnDisplay = (players, currentPlayerIndex) => {
+    const currentPlayer = players[currentPlayerIndex];
+    document.querySelector("#playerTurn").innerHTML = `Player: ${currentPlayer.name} (${currentPlayer.mark})`;
+  };
+
+  const updateCell = (rowIndex, colIndex, content) => {
+      gameBoard.getBoard()[rowIndex][colIndex] = content;
+  };
+
+  const resetBoard = () => {
+    for (let i = 0; i < gameBoard.getBoard.length; i++) {
+      for (let j = 0; j < board[i].length; j++) {
+        board[i][j] = "";
+      }
+    }
+  };
+
+  return {
+    updateCell,
+    updatePlayerTurnDisplay,
+    resetBoard,
+}})();
+
 const gameControls = (() => {
   const createPlayer = (name, mark) => {
     return {
@@ -184,12 +177,26 @@ const gameControls = (() => {
     };
   };
 
+  const handleCellClick = (i, j, cell) => {
+    let cellContent = cell.textContent;
+
+          if (cellContent !== "") {
+            return;
+          } else {
+            cellContent = placeMark();
+            cell.innerHTML = cellContent;
+
+            displayController.updateCell(i, j, cellContent);
+          }
+          game.checkWinner(gameBoard.getBoard());
+  }
+
   const placeMark = () => {
     return game.getNextPlayer();
   };
 
   return {
     createPlayer,
-    placeMark,
+    handleCellClick,
   }
 })();
