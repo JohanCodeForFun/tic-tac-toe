@@ -78,9 +78,3 @@ tr > td {
     transform: rotate(180deg);
   }
 }
-
-/* body > table > tbody > tr > td {
-  color: green;
-  transition: red 1s ease-out 0.25s;
-  animation: rotateAnimation 1s ease-out forwards;
-} */
